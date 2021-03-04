@@ -116,7 +116,7 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 	```
 2. Who was the 6th highest spender? (No need to insert query here, just type in the answer.)
 	```
-	SENATE LEADERSHIP FUND
+	
     15040800
 	```
 
@@ -141,7 +141,7 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 	```
 6.  How many ads did the 'TOM STEYER 2020' campaign run? (No need to insert query here, just type in the answer.)
 	```
-	1370
+	1369
     
 	```
 7. Write a query that has, in the US region only, the total spend in usd for each advertiser_name and how many ads they ran. (Hint, you're going to have to join tables for this one). 
@@ -160,16 +160,45 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 
 1. Who went on more bike trips, Males or Females?
 	```
-	[YOUR QUERY HERE]
+	SELECT 
+        gender, COUNT(gender)
+    FROM 
+        `bigquery-public-data.new_york_citibike.citibike_trips`
+    GROUP BY
+        gender
 	```
 2. What was the average, shortest, and longest bike trip taken in minutes?
 	```
-	[YOUR QUERY HERE]
+	SELECT 
+        ROUND(AVG(tripduration)/60) AS avg_trip, 
+        ROUND(MIN(tripduration)/60) AS min_trip, 
+        ROUND(MAX(tripduration)/60) AS max_trip
+    FROM 
+        `bigquery-public-data.new_york_citibike.citibike_trips`
+
 	```
 
 3. Write a query that, for every station_name, has the amount of trips that started there and the amount of trips that ended there. (Hint, use two temporary tables, one that counts the amount of starts, the other that counts the number of ends, and then join the two.) 
 	```
-	[YOUR QUERY HERE]
+	WITH 
+        START_TABLE AS (
+            SELECT start_station_name, COUNT(start_station_name) AS count_start
+            FROM `bigquery-public-data.new_york_citibike.citibike_trips`
+            GROUP BY start_station_name
+        ),
+        END_TABLE AS (
+            SELECT end_station_name, COUNT(end_station_name) AS count_end
+            FROM `bigquery-public-data.new_york_citibike.citibike_trips`
+            GROUP BY end_station_name
+        )
+
+    SELECT 
+        st.start_station_name, st.count_start, et.count_end
+    FROM 
+        START_TABLE st, END_TABLE et
+    WHERE 
+        st.start_station_name = et.end_station_name
+
 	```
 # The next section is the Google Colab section.  
 1. Open up this [this Colab notebook](https://colab.research.google.com/drive/1kHdTtuHTPEaMH32GotVum41YVdeyzQ74?usp=sharing).
@@ -178,5 +207,5 @@ For this section of the exercise we will be using the `bigquery-public-data.aust
 4. Click the 'Share' button on the top right.  
 5. Change the permissions so anyone with link can view. 
 6. Copy the link and paste it right below this line. 
-	* YOUR LINK:  ________________________________
+	* YOUR LINK: https://colab.research.google.com/drive/1TsBhGW6q9sASsgsvjv7HkHFhCMiI6WWH?usp=sharing
 9. Complete the two questions in the colab notebook file. 
